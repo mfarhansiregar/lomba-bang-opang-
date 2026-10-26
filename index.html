@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriSmart — Smart Farming & Food Security Platform</title>
+    <!-- Google Fonts: Poppins & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="light-theme">
+
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="brand-logo" onclick="switchTab('dashboard')">
+                <i class="fa-solid fa-seedling logo-icon"></i>
+                <div class="brand-text">
+                    <span class="brand-name">AgriSmart</span>
+                    <span class="brand-tag">Smart Farming Platform</span>
+                </div>
+            </a>
+
+            <nav class="nav-menu" id="navMenu">
+                <button class="nav-link active" data-tab="dashboard" onclick="switchTab('dashboard')">
+                    <i class="fa-solid fa-chart-line"></i> Dashboard
+                </button>
+                <button class="nav-link" data-tab="plants" onclick="switchTab('plants')">
+                    <i class="fa-solid fa-leaf"></i> Tanaman Saya
+                </button>
+                <button class="nav-link" data-tab="schedule" onclick="switchTab('schedule')">
+                    <i class="fa-solid fa-droplet"></i> Penyiraman
+                </button>
+                <button class="nav-link highlight" data-tab="planner" onclick="switchTab('planner')">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Smart Planner
+                </button>
+                <button class="nav-link" data-tab="catalog" onclick="switchTab('catalog')">
+                    <i class="fa-solid fa-book-open"></i> Panduan
+                </button>
+                <button class="nav-link" data-tab="education" onclick="switchTab('education')">
+                    <i class="fa-solid fa-graduation-cap"></i> Edukasi
+                </button>
+                <button class="nav-link" data-tab="calculator" onclick="switchTab('calculator')">
+                    <i class="fa-solid fa-calculator"></i> Kalkulator Air
+                </button>
+            </nav>
+
+            <div class="nav-actions">
+                <button id="themeToggleBtn" class="theme-toggle-btn" title="Ganti Mode Gelap/Terang">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <button class="mobile-toggle" id="mobileMenuBtn">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="main-content container">
+
+        <!-- Hero Banner Banner -->
+        <section class="hero-section">
+            <div class="hero-badge"><i class="fa-solid fa-shield-halved"></i> Soedirman Technoporia 2026 — Global Food Security</div>
+            <h1 class="hero-title">Solusi Pintar Pertanian Perkotaan & Ketahanan Pangan Mandiri</h1>
+            <p class="hero-subtitle">
+                Kelola tanaman rumah, optimalkan penggunaan air tanah, dan susun perencanaan kebun mikro Anda secara presisi untuk mewujudkan kedaulatan pangan keluarga.
+            </p>
+            <div class="hero-stats">
+                <div class="stat-pill"><i class="fa-solid fa-droplet text-blue"></i> Hemat Air hingga 40%</div>
+                <div class="stat-pill"><i class="fa-solid fa-wheat-awn text-green"></i> Panen Lebih Terukur</div>
+                <div class="stat-pill"><i class="fa-solid fa-house-chimney-window text-amber"></i> Ramah Lahan Sempit</div>
+            </div>
+        </section>
+
+        <!-- VIEW 1: DASHBOARD -->
+        <section id="view-dashboard" class="tab-view active">
+            <div class="view-header">
+                <h2><i class="fa-solid fa-chart-pie"></i> Ringkasan Kebun Pintar</h2>
+                <p>Pantau performa tanaman, tugas harian, dan estimasi hasil panen secara real-time.</p>
+            </div>
+
+            <!-- Stats Overview Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon bg-green-light"><i class="fa-solid fa-plant-wilt text-green"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Tanaman Active</span>
+                        <h3 id="dashTotalPlants">0</h3>
+                        <span class="stat-sub">Di kebun Anda</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-blue-light"><i class="fa-solid fa-faucet-drip text-blue"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Penyiraman Hari Ini</span>
+                        <h3 id="dashWateringToday">0</h3>
+                        <span class="stat-sub" id="dashWateringSub">Tugas pending</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-amber-light"><i class="fa-solid fa-calendar-check text-amber"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Estimasi Panen Terdekat</span>
+                        <h3 id="dashNextHarvest">-</h3>
+                        <span class="stat-sub" id="dashNextHarvestSub">Dalam beberapa hari</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-emerald-light"><i class="fa-solid fa-bottle-water text-emerald"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Estimasi Air Harian</span>
+                        <h3 id="dashWaterVolume">0 L</h3>
+                        <span class="stat-sub">Kebutuhan total kebun</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts & Recent Activity Section -->
+            <div class="dashboard-widgets">
+                <div class="widget-card">
+                    <div class="widget-header">
+                        <h3><i class="fa-solid fa-chart-donut"></i> Distribusi Kategori Tanaman</h3>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="widget-card">
+                    <div class="widget-header">
+                        <h3><i class="fa-solid fa-clock-rotate-left"></i> Aktivitas & Pengingat Terbaru</h3>
+                        <button class="btn btn-outline btn-sm" onclick="switchTab('schedule')">Lihat Semua</button>
+                    </div>
+                    <div class="activity-list" id="recentActivityList">
+                        <!-- Activity items loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 2: MANAJEMEN TANAMAN (CRUD) -->
+        <section id="view-plants" class="tab-view">
+            <div class="view-header flex-between">
+                <div>
+                    <h2><i class="fa-solid fa-seedling"></i> Manajemen Tanaman Saya</h2>
+                    <p>Kelola koleksi tanaman, perbarui status pertumbuhan, dan pantau kondisi kebun.</p>
+                </div>
+                <button class="btn btn-primary" onclick="openAddPlantModal()">
+                    <i class="fa-solid fa-plus"></i> Tambah Tanaman
+                </button>
+            </div>
+
+            <div class="filter-bar">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="plantSearchInput" placeholder="Cari tanaman berdasarkan nama..." oninput="renderPlantsList()">
+                </div>
+                <select id="plantCategoryFilter" class="form-select" onchange="renderPlantsList()">
+                    <option value="ALL">Semua Kategori</option>
+                    <option value="Sayur Daun">Sayur Daun</option>
+                    <option value="Sayur Buah">Sayur Buah</option>
+                    <option value="Rempah & Herba">Rempah & Herba</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
+            </div>
+
+            <div id="plantsGrid" class="plants-grid">
+                <!-- Plant cards populated dynamically -->
+            </div>
+        </section>
+
+        <!-- VIEW 3: JADWAL PENYIRAMAN -->
+        <section id="view-schedule" class="tab-view">
+            <div class="view-header flex-between">
+                <div>
+                    <h2><i class="fa-solid fa-droplet-degree"></i> Jadwal & Pengingat Penyiraman</h2>
+                    <p>Pastikan tanaman Anda mendapatkan hidrasi optimal tanpa pemborosan air.</p>
+                </div>
+                <button class="btn btn-primary" onclick="openAddScheduleModal()">
+                    <i class="fa-solid fa-calendar-plus"></i> Tambah Jadwal
+                </button>
+            </div>
+
+            <div class="schedule-container">
+                <div class="schedule-summary-box">
+                    <div class="summary-item">
+                        <i class="fa-solid fa-list-check text-green"></i>
+                        <div>
+                            <span class="summary-count" id="schedTotalCount">0</span>
+                            <span class="summary-label">Total Jadwal</span>
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <i class="fa-solid fa-clock text-amber"></i>
+                        <div>
+                            <span class="summary-count" id="schedPendingCount">0</span>
+                            <span class="summary-label">Belum Disiram Hari Ini</span>
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <i class="fa-solid fa-circle-check text-blue"></i>
+                        <div>
+                            <span class="summary-count" id="schedDoneCount">0</span>
+                            <span class="summary-label">Selesai Disiram</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm p-4">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Tanaman</th>
+                                    <th>Waktu Penyiraman</th>
+                                    <th>Frekuensi</th>
+                                    <th>Kebutuhan Air</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scheduleTableBody">
+                                <!-- Schedules loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 4: SMART GARDEN PLANNER (INOVASI) -->
+        <section id="view-planner" class="tab-view">
+            <div class="planner-banner">
+                <div class="planner-banner-content">
+                    <span class="badge bg-gold-badge"><i class="fa-solid fa-lightbulb"></i> Fitur Inovasi Lomba S-TECH 2026</span>
+                    <h2>Smart Garden Planner Engine</h2>
+                    <p>
+                        Alat bantu kalkulasi terukur berbasis efisiensi agronomi untuk merencanakan tata letak kebun mikro, proyeksi volume panen, dan kontribusi terhadap ketahanan pangan keluarga.
+                    </p>
+                </div>
+            </div>
+
+            <div class="planner-grid">
+                <!-- Input Panel -->
+                <div class="card planner-input-card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-sliders"></i> Parameter Lahan & Komoditas</h3>
+                    </div>
+                    <form id="plannerForm" onsubmit="event.preventDefault(); calculateSmartPlan();">
+                        <div class="form-group">
+                            <label for="planLandArea">Luas Lahan Tersedia (m²)</label>
+                            <input type="number" id="planLandArea" class="form-input" min="0.5" step="0.5" value="4" required>
+                            <small class="form-text">Contoh: Balkon 2x2m = 4 m², Pekarangan samping = 10 m²</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="planCropSelect">Pilih Jenis Komoditas Utama</label>
+                            <select id="planCropSelect" class="form-select" required>
+                                <option value="bayam">Bayam Hijau (Sayur Daun Cepat Panen)</option>
+                                <option value="kangkung">Kangkung Darat (Toleran Air & Cepat Panen)</option>
+                                <option value="selada">Selada Keriting (Hidroponik / Pot)</option>
+                                <option value="cabai">Cabai Merah / Rawit (Nilai Ekonomis Tinggi)</option>
+                                <option value="tomat">Tomat Ranti (Kaya Nutrisi)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="planSunlight">Intensitas Sinar Matahari</label>
+                            <select id="planSunlight" class="form-select">
+                                <option value="full">Penuh (> 6 jam / hari)</option>
+                                <option value="partial">Sedang (3 - 5 jam / hari)</option>
+                                <option value="low">Minim (< 3 jam / hari)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="planMethod">Metode Tanam</label>
+                            <select id="planMethod" class="form-select">
+                                <option value="soil">Media Tanah / Polybag Modern</option>
+                                <option value="hydroponic">Hidroponik Vertikal (Sangat Hemat Lahan)</option>
+                                <option value="raisedbed">Bedengan / Raised Bed Mikro</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">
+                            <i class="fa-solid fa-calculator"></i> Kalkulasi Rencana Tanam
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Result Panel -->
+                <div class="card planner-result-card" id="plannerResultBox">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-square-poll-vertical"></i> Hasil Analisis Rencana Tanam</h3>
+                    </div>
+                    
+                    <div id="plannerDefaultPrompt" class="text-center p-5">
+                        <i class="fa-solid fa-compass-drafting text-muted" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <p class="text-muted">Isi parameter lahan di sebelah kiri dan klik tombol kalkulasi untuk melihat rekomendasi penanaman terukur.</p>
+                    </div>
+
+                    <div id="plannerResultsContent" class="hidden">
+                        <div class="planner-output-grid">
+                            <div class="output-metric">
+                                <i class="fa-solid fa-border-all text-green"></i>
+                                <div>
+                                    <span class="metric-value" id="resCapacity">0</span>
+                                    <span class="metric-label">Kapasitas Tanaman Optimal</span>
+                                </div>
+                            </div>
+                            <div class="output-metric">
+                                <i class="fa-solid fa-droplet text-blue"></i>
+                                <div>
+                                    <span class="metric-value" id="resDailyWater">0 L</span>
+                                    <span class="metric-label">Estimasi Air / Hari</span>
+                                </div>
+                            </div>
+                            <div class="output-metric">
+                                <i class="fa-solid fa-calendar-day text-amber"></i>
+                                <div>
+                                    <span class="metric-value" id="resHarvestDays">0 Hari</span>
+                                    <span class="metric-label">Estimasi Masa Panen</span>
+                                </div>
+                            </div>
+                            <div class="output-metric">
+                                <i class="fa-solid fa-weight-hanging text-emerald"></i>
+                                <div>
+                                    <span class="metric-value" id="resYieldKg">0 kg</span>
+                                    <span class="metric-label">Proyeksi Hasil Panen</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="food-security-impact">
+                            <h4><i class="fa-solid fa-hand-holding-heart"></i> Dampak Ketahanan Pangan Keluarga</h4>
+                            <p id="resImpactText">
+                                <!-- Dynamic explanation -->
+                            </p>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-label">
+                                    <span>Kemandirian Pangan Sayur Mandiri</span>
+                                    <span id="resSecurityPercent">0%</span>
+                                </div>
+                                <div class="progress-track">
+                                    <div class="progress-fill" id="resSecurityFill" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="planner-notes">
+                            <h5><i class="fa-solid fa-circle-info"></i> Transparansi Metode Perhitungan:</h5>
+                            <small id="resMathExplanation" class="text-muted"></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 5: PANDUAN KATALOG TANAMAN -->
+        <section id="view-catalog" class="tab-view">
+            <div class="view-header">
+                <h2><i class="fa-solid fa-book-bookmark"></i> Katalog & Panduan Menanam</h2>
+                <p>Ensiklopedia tanaman pangan hortikultura lengkap dengan parameter teknis perawatan.</p>
+            </div>
+
+            <div class="filter-bar">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="guideSearchInput" placeholder="Cari panduan tanaman (contoh: tomat, bayam)..." oninput="renderCatalog()">
+                </div>
+                <div class="category-pills" id="guideCategoryPills">
+                    <button class="pill active" onclick="filterGuideCategory('ALL', this)">Semua</button>
+                    <button class="pill" onclick="filterGuideCategory('Sayur Daun', this)">Sayur Daun</button>
+                    <button class="pill" onclick="filterGuideCategory('Sayur Buah', this)">Sayur Buah</button>
+                    <button class="pill" onclick="filterGuideCategory('Rempah & Herba', this)">Rempah & Herba</button>
+                </div>
+            </div>
+
+            <div class="notice-box">
+                <i class="fa-solid fa-triangle-exclamation text-amber"></i>
+                <span><strong>Catatan:</strong> Estimasi panen dan frekuensi penyiraman merupakan perkiraan teknis umum yang perlu disesuaikan dengan kondisi cuaca, kelembapan lokal, dan kualitas media tanam Anda.</span>
+            </div>
+
+            <div class="catalog-grid" id="catalogGrid">
+                <!-- Dynamic plant guide cards -->
+            </div>
+        </section>
+
+        <!-- VIEW 6: EDUKASI KETAHANAN PANGAN -->
+        <section id="view-education" class="tab-view">
+            <div class="view-header">
+                <h2><i class="fa-solid fa-graduation-cap"></i> Modul Edukasi Ketahanan Pangan</h2>
+                <p>Wawasan praktis seputar efisiensi lahan, hidroponik, penghematan air, dan adaptasi iklim.</p>
+            </div>
+
+            <div class="education-grid">
+                <article class="edu-card">
+                    <div class="edu-icon"><i class="fa-solid fa-building-wheat"></i></div>
+                    <h3>Pertanian Perkotaan (Urban Farming)</h3>
+                    <p>Memanfaatkan sudut rumah, balkon, dan dinding luar untuk menanam bahan pangan harian guna mengurangi ketergantungan pasokan pasar luar daerah.</p>
+                    <div class="edu-tags"><span>Micro-gardening</span><span>Kemandirian</span></div>
+                </article>
+
+                <article class="edu-card">
+                    <div class="edu-icon"><i class="fa-solid fa-water"></i></div>
+                    <h3>Sistem Hidroponik Sederhana</h3>
+                    <p>Teknik menanam tanpa tanah menggunakan larutan nutrisi air. Menghemat lahan hingga 70% dan memungkinkan budidaya di area minim tanah subur.</p>
+                    <div class="edu-tags"><span>Wick System</span><span>NFT</span></div>
+                </article>
+
+                <article class="edu-card">
+                    <div class="edu-icon"><i class="fa-solid fa-faucet"></i></div>
+                    <h3>Efisiensi & Penghematan Air</h3>
+                    <p>Metode penyiraman presisi di pagi/sore hari untuk mengurangi penguapan, serta pemanfaatan air buangan AC atau penampungan air hujan yang disaring.</p>
+                    <div class="edu-tags"><span>Drip Irrigation</span><span>Konservasi</span></div>
+                </article>
+
+                <article class="edu-card">
+                    <div class="edu-icon"><i class="fa-solid fa-border-top-left"></i></div>
+                    <h3>Pemanfaatan Lahan Sempit</h3>
+                    <p>Metode vertikultur, rak bertingkat, dan pot gantung untuk memaksimalkan indeks luas daun per meter persegi area lantai rumah.</p>
+                    <div class="edu-tags"><span>Vertikultur</span><span>Rak Vertikal</span></div>
+                </article>
+
+                <article class="edu-card">
+                    <div class="edu-icon"><i class="fa-solid fa-trash-can-arrow-up"></i></div>
+                    <h3>Pengurangan Limbah Pangan (Food Waste)</h3>
+                    <p>Mengubah sisa dapur organik menjadi pupuk kompos berkualitas tinggi untuk menyuburkan kembali tanaman mikro Anda secara berkelanjutan.</p>
+                    <div class="edu-tags"><span>Komposting</span><span>Zero Waste</span></div>
+                </article>
+
+                <article class="edu-card">
+                    <div class="edu-icon"><i class="fa-solid fa-cloud-sun-rain"></i></div>
+                    <h3>Adaptasi Pertanian Perubahan Iklim</h3>
+                    <p>Penggunaan naungan net (shading net) dan varietas tahan cuaca ekstrem untuk menjaga ketahanan produksi tanaman saat gelombang panas.</p>
+                    <div class="edu-tags"><span>Iklim Mikro</span><span>Resiliensi</span></div>
+                </article>
+            </div>
+        </section>
+
+        <!-- VIEW 7: KALKULATOR AIR -->
+        <section id="view-calculator" class="tab-view">
+            <div class="view-header">
+                <h2><i class="fa-solid fa-calculator"></i> Kalkulator Kebutuhan Air Tanaman</h2>
+                <p>Hitung perkiraan konsumsi air harian dan mingguan kebun Anda untuk mencegah overwatering.</p>
+            </div>
+
+            <div class="calculator-card-wrapper">
+                <div class="card p-4">
+                    <form id="waterCalcForm" onsubmit="event.preventDefault(); runWaterCalculator();">
+                        <div class="form-group">
+                            <label for="calcPlantCount">Jumlah Total Tanaman (pot/polybag)</label>
+                            <input type="number" id="calcPlantCount" class="form-input" min="1" value="10" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="calcWaterPerPlant">Kebutuhan Air Rata-rata per Tanaman (ml/hari)</label>
+                            <input type="number" id="calcWaterPerPlant" class="form-input" min="50" step="50" value="250" required>
+                            <small class="form-text">Rekomendasi umum: Sayur daun = 200-300 ml, Sayur buah = 400-600 ml</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="calcDays">Durasi Periode Perhitungan (Hari)</label>
+                            <input type="number" id="calcDays" class="form-input" min="1" max="30" value="7" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fa-solid fa-calculator"></i> Hitung Estimasi Air
+                        </button>
+                    </form>
+
+                    <div id="calcResultDisplay" class="calc-result-box hidden">
+                        <h4>Hasil Estimasi Penggunaan Air:</h4>
+                        <div class="calc-result-number" id="calcLiterTotal">0 Liter</div>
+                        <p id="calcBreakdownText" class="text-muted mb-3"></p>
+                        <div class="tip-box">
+                            <i class="fa-solid fa-lightbulb text-amber"></i>
+                            <span id="calcTipText">Disarankan menyiram pada pagi hari sebelum pukul 08:00 untuk meminimalkan evaporasi.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal Form: Tambah / Edit Tanaman -->
+    <div class="modal-overlay" id="plantModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="plantModalTitle"><i class="fa-solid fa-plus-circle"></i> Tambah Tanaman Baru</h3>
+                <button class="modal-close" onclick="closePlantModal()">&times;</button>
+            </div>
+            <form id="plantForm" onsubmit="savePlantForm(event)">
+                <input type="hidden" id="formPlantId">
+                
+                <div class="form-group">
+                    <label for="formPlantName">Nama Tanaman *</label>
+                    <input type="text" id="formPlantName" class="form-input" placeholder="Contoh: Tomat Ranti Pot 1" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="formPlantCategory">Kategori *</label>
+                    <select id="formPlantCategory" class="form-select" required>
+                        <option value="Sayur Daun">Sayur Daun</option>
+                        <option value="Sayur Buah">Sayur Buah</option>
+                        <option value="Rempah & Herba">Rempah & Herba</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="formPlantDate">Tanggal Tanam *</label>
+                    <input type="date" id="formPlantDate" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="formPlantStatus">Status Pertumbuhan *</label>
+                    <select id="formPlantStatus" class="form-select" required>
+                        <option value="Semaian">Semaian / Vegetatif Awal</option>
+                        <option value="Tumbuh Subur">Tumbuh Subur (Vegetatif)</option>
+                        <option value="Berbunga/Berbuah">Berbunga / Berbuah</option>
+                        <option value="Siap Panen">Siap Panen</option>
+                        <option value="Perlu Perhatian">Perlu Perhatian (Layu/Hama)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="formPlantWater">Kebutuhan Air (ml/hari)</label>
+                    <input type="number" id="formPlantWater" class="form-input" min="50" step="50" value="250" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="formPlantNotes">Catatan / Lokasi Penempatan</label>
+                    <textarea id="formPlantNotes" class="form-input" rows="2" placeholder="Contoh: Rak atas dekat jendela selatan"></textarea>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closePlantModal()">Batal</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Simpan Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Form: Tambah Jadwal Penyiraman -->
+    <div class="modal-overlay" id="scheduleModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-clock"></i> Tambah Jadwal Penyiraman</h3>
+                <button class="modal-close" onclick="closeScheduleModal()">&times;</button>
+            </div>
+            <form id="scheduleForm" onsubmit="saveScheduleForm(event)">
+                <div class="form-group">
+                    <label for="formSchedPlant">Pilih Tanaman *</label>
+                    <select id="formSchedPlant" class="form-select" required>
+                        <!-- Populated dynamically -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="formSchedTime">Waktu Penyiraman *</label>
+                    <input type="time" id="formSchedTime" class="form-input" value="07:00" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="formSchedFreq">Frekuensi *</label>
+                    <select id="formSchedFreq" class="form-select" required>
+                        <option value="Setiap Hari">Setiap Hari</option>
+                        <option value="2 Hari Sekali">2 Hari Sekali</option>
+                        <option value="Mingguan">Mingguan</option>
+                    </select>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeScheduleModal()">Batal</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Simpan Jadwal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <div class="brand-logo">
+                    <i class="fa-solid fa-seedling text-green"></i>
+                    <span class="brand-name">AgriSmart</span>
+                </div>
+                <p>Platform Pertanian Presisi untuk Ketahanan Pangan Perkotaan Berkelanjutan.</p>
+                <small class="text-muted">Dikembangkan untuk Kompetisi Soedirman Technoporia (S-TECH) 2026.</small>
+            </div>
+            <div class="footer-links">
+                <a href="#" onclick="switchTab('dashboard')">Dashboard</a>
+                <a href="#" onclick="switchTab('plants')">Tanaman Saya</a>
+                <a href="#" onclick="switchTab('planner')">Smart Planner</a>
+                <a href="#" onclick="switchTab('catalog')">Panduan Catalog</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container text-center">
+                <p>&copy; 2026 AgriSmart Platform. Open-source & Non-profit Educational Project.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
